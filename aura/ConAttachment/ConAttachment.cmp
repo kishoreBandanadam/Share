@@ -1,0 +1,126 @@
+<aura:component controller="ContactAttachWrapperUsingContentVersion" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId" access="global" >
+    
+    <aura:attribute name="wrapperList" type="object[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doinit}"/>
+    <aura:attribute name="sNo" type="Integer" default= "1"/>
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    
+    <aura:attribute name="isOpen" type="Boolean" default="false"/>
+    
+    <aura:handler name="AttachmentUploaderEvent" event="c:AttachmentUploaderEvent" action="{!c.handleComponentEvent}"/>
+    
+    <aura:handler name="DeleteNotifyComponentEvent" event="c:DeleteNotifyComponentEvent" action="{!c.DeleteNotify}"/>
+    <aura:registerEvent name="DeleteAttachmentsEvent" type="c:DeleteAttachmentsEvent"/>
+    
+    <!-- Spinner-->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    
+    <!--aura:registerEvent name="DeleteAttachmentsEvent" type="c:DeleteAttachmentsEvent"/-->
+    <!--aura:registerEvent name="OpenModalEvent" type="c:OpenModalEvent"/-->
+    <c:Header/>
+    <div class="slds-table--header-fixed_container">
+        <div class="slds-scrollable_y" style="height: 36rem;">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <thead>
+                    <tr class="slds-line-height_reset">
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="ID">Select</div>
+                        </th>
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="ID">Contact Name</div>
+                        </th>
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="Email">Email</div>
+                        </th>
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="Phone">Phone</div>
+                        </th>
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="Attachments">Attachments</div>
+                        </th>
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="Add">Add Attachments</div>
+                        </th>
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="Edit">Edit Contact</div>
+                        </th>
+                        <th class="slds-text-title_caps" scope="col">
+                            <div class="slds-truncate" title="Notify">Notify</div>
+                        </th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+
+                    
+                    <aura:iteration items="{!v.wrapperList}" var="w" indexVar="i">
+                        
+                        <tr class="slds-hint-parent">
+                            <td data-label="Select">
+                                {!v.sNo + i}
+                                <!--div class="" title="Select"><lightning:input type="checkbox" name="input1"/></div-->
+                            </td>
+                            <td data-label="Contact Name">
+                                <div class="" title="{!w.wCon.Id}"><a title="{!w.wCon.Id}" onclick="{!c.detailPage}">{!w.wCon.Name}</a></div>
+                            </td>
+                            <td data-label="Email">
+                                <div class="slds-truncate" title="{!w.wCon.Email}">{!w.wCon.Email}</div>
+                            </td>
+                            <td data-label="Phone">
+                                <div class="slds-truncate" title="{!w.wCon.Phone}">{!w.wCon.Phone}</div>
+                            </td>
+                            <td data-label="Loop">
+                                <lightning:layout  multipleRows="true">
+                                    <aura:iteration items="{!w.wCV}" var="wc">
+                                        
+                                        
+                                        <lightning:layoutItem size="2">
+                                            <lightning:buttonIcon size="large" iconName="utility:file" title="{!wc.Title}" value ="{!wc.ContentDocumentId}" variant="bare" onclick="{! c.handleClick }"/>
+                                        </lightning:layoutItem>
+                                        
+                                        
+                                        
+                                        <!--lightning:fileCard fileId="{!wc}" description="view"/><br/-->
+                                    </aura:iteration>
+                                </lightning:layout>
+                            </td>
+                            <td data-label="Add Attachments">
+                                <div class="slds-truncate" title="Add Attachments"><c:AttachmentUploader recordId="{!w.wCon.Id}"/></div>
+                            </td>
+                            <td data-label="Edit Contact">
+                                <div class="slds-truncate" title="Edit"><lightning:buttonIcon value="{!w}" size="large" iconName="utility:edit" onclick="{!c.openDetail}"/></div>
+                            </td>
+                            <td data-label="Edit Contact">
+                                <div class="slds-truncate" title="Edit"><lightning:button label="Notify" value="{!w.wCon.Id}" onclick="{!c.openNotify}"/></div>
+                            </td>
+
+                        </tr>
+                        
+                    </aura:iteration>
+                    
+                </tbody>
+                
+            </table>
+        </div>    
+    </div>
+    <c:DeleteAttachmentsCV/>
+
+    <!--c:Footer/-->
+    <!--c:DeleteAttachments aura:id="childComp"/-->
+    <aura:if isTrue="{!v.isOpen}">
+        <div class="demo-only" style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <div class="slds-float_right">
+                        <lightning:buttonIcon  iconName="utility:close" size="large" variant="bare-inverse" onclick="{!c.closeModal}"/>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <c:NotifyModal recordId="{!v.recordId}"/>
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>
+</aura:component>

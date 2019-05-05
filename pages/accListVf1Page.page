@@ -1,0 +1,54 @@
+<apex:page controller="accListVf1">
+    <apex:pageBlock >
+        
+        <apex:form >
+            <apex:pageBlock title="My Content" mode="edit">
+                <apex:pageBlockButtons >
+                    <apex:commandButton action="{!save}" value="Save" reRender="blockTable,form1,repeatTable"/>
+                </apex:pageBlockButtons>
+                <apex:pageBlockSection id="form1" title="My Content Section" columns="2">
+                    <apex:inputField value="{!account.name}"/>
+                    <apex:inputField value="{!account.Industry}"/>
+                    <apex:inputField value="{!account.type}"/>
+                    <apex:inputField value="{!account.accountNumber}"/>
+                </apex:pageBlockSection>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:pageBlock>
+    
+    <apex:form >
+        <apex:pageBlock > 
+            <apex:pageBlockButtons >
+                <apex:commandButton action="{!Edit}" value="Edit"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable id="blockTable" value="{!AccList}" var="acc">
+                <apex:column value="{!acc.Id}"/>
+                <apex:column value="{!acc.Name}"/>
+                <apex:column value="{!acc.Industry}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock> 
+    </apex:form>
+    
+    
+    <apex:pageBlock >
+                  <table id="repeatTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Industry</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <apex:repeat value="{!AccList}" var="acc">
+                        <tr>
+                            <td><apex:outputText >{!acc.Id}</apex:outputText></td>
+                            <td><apex:outputText >{!acc.Name}</apex:outputText></td>
+                            <td><apex:outputText >{!acc.Industry}</apex:outputText></td>
+                        </tr>
+                    </apex:repeat>
+                    
+                </tbody>
+            </table>
+    </apex:pageBlock>
+</apex:page>

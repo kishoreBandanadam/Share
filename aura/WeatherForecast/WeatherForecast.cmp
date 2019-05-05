@@ -1,0 +1,51 @@
+<aura:component controller="WeatherForecast" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    
+    <aura:attribute name="recordId" type="Id"/>
+    <aura:attribute name="weather" type="object"/>
+    <aura:attribute name="isTrue" type="Boolean" default="false"/>
+    <!--aura:handler name="init" value="{!this}" action="{!c.doinit}"/-->
+    
+    
+    <article class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-account" title="account">
+                        <lightning:icon iconName="custom:custom60" alternativeText="Weather Forecast" />
+                        <span class="slds-assistive-text">account</span>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span>Weather Forecast</span>
+                    </h2>
+                </div>
+                <div class="slds-float_right">
+                	<lightning:buttonIcon iconName="utility:refresh" alternativeText="Refresh" onclick="{!c.refreshWeather}"/>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <aura:if isTrue="{!v.isTrue}">
+                <dl class="slds-list_horizontal slds-wrap">
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Temperature">Temperature:</dt>
+                    <dd class="slds-item_detail slds-truncate">{!v.weather.temp} celcius</dd>
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Pressure">Pressure:</dt>
+                    <dd class="slds-item_detail slds-truncate">{!v.weather.pressure} hpa</dd>
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Humidity">Humidity:</dt>
+                    <dd class="slds-item_detail slds-truncate">{!v.weather.humidity} %</dd>
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Min Temperature">Min Temperature:</dt>
+                    <dd class="slds-item_detail slds-truncate">{!v.weather.temp_min} celcius</dd>
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Max Temperature">Max Temperature:</dt>
+                    <dd class="slds-item_detail slds-truncate">{!v.weather.temp_max} celcius</dd>
+                    <dt class="slds-item_label slds-text-color_weak slds-truncate" title="Description">Description:</dt>
+                    <dd class="slds-item_detail slds-truncate">{!v.weather.weather[0].description}</dd>
+                </dl>
+                <aura:set attribute="else">
+                    <div> This contact Mailing city is not filled</div>
+                </aura:set>
+            </aura:if>
+        </div>
+    </article>
+    
+</aura:component>

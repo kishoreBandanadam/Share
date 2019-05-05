@@ -1,0 +1,100 @@
+<!-- DeleteAttachmentsCV -->
+<aura:component controller="ContactAttachWrapperUsingContentVersion" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" >
+    <aura:attribute name="isOpen" type="boolean"/>
+    <aura:attribute name="fileIds" type="Object"/>
+    <aura:attribute name="aIds" type="List"/>
+    <aura:attribute name="sNo" type="Integer" default="1"/>
+    
+    <aura:handler event="c:DeleteAttachmentsEvent" action="{!c.handleDeleteEvent}"/>
+    
+    <aura:registerEvent name="deleteRow" type="c:DeleteRowEvent"/>
+    <aura:registerEvent name="DeleteNotifyComponentEvent" type="c:DeleteNotifyComponentEvent"/>
+    <aura:handler name="deleteRow" event="c:DeleteRowEvent" action="{!c.deleteRow}"/>
+    
+    <!--aura:method name="childmethod" action="{!c.handleDeleteEvent}"> 
+        <aura:attribute name="fileIds" type="Object"/> 
+    </aura:method-->
+    
+    <aura:if isTrue="{!v.isOpen}">
+        <div class="demo-only" style="height: 640px;">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <div class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+                            <lightning:buttonIcon iconName="utility:close" 
+                                                  onclick="{! c.closeModal }" 
+                                                  variant="bare-inverse"
+                                                  size="large"
+                                                  alternativeText="close" />
+                        </div>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{!v.fileIds.Name} Details</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <!--Contact Form-->
+                        
+                        <div class="slds-grid slds-wrap">
+                            <div class="slds-col slds-size_1-of-2 slds-p-left_x-large">
+                                <lightning:input name="ContactName" label="First Name" value="{!v.fileIds.FirstName}"/>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-p-left_x-large">
+                                <lightning:input name="ContactName" label="Last Name" value="{!v.fileIds.LastName}"/>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-p-left_x-large">
+                                <lightning:input type="email" name="Email" label="Email" value="{!v.fileIds.Email}"/>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-p-left_x-large">
+                                <lightning:input type="tel" name="ContactName" label="Phone" value="{!v.fileIds.Phone}"/>
+                            </div>
+                        </div>
+                        
+                        <!--Contact Form End-->
+                        
+                        
+                        <br/>
+                        <h2>Attachments</h2>
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="S.No">S.No</div>
+                                    </th>
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Attachment Name">Attachment Name</div>
+                                    </th>
+                                    <th class="slds-text-title_caps" scope="col">
+                                        <div class="slds-truncate" title="Delete">Delete</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                <aura:iteration items="{!v.aIds}" var="f"  indexVar="i">
+                                    <tr>
+                                        <td data-label="Sno" scope="row">
+                                            <div class="slds-truncate" title="Cloudhub">{!v.sNo + i}</div>
+                                        </td>
+                                        <td data-label="Title">
+                                            <div class="slds-truncate" title="Attachment Title"><lightning:formattedText value="{!f.Title}"/></div>
+                                        </td>
+                                        <td data-label="Delete">
+                                            <div class="slds-truncate" title="DeleteIcon"><lightning:buttonIcon iconName="utility:delete" value="{!f.ContentDocumentId}" size="large" variant="bare"  alternativeText="delete" onclick="{!c.deleteFile}"/></div>
+                                        </td>
+                                    </tr>
+                                </aura:iteration>  
+                            </tbody>
+                        </table>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <div>
+                            <lightning:button label="Update" variant="brand" onclick="{!c.UpdateContact}"/>
+                            <lightning:button label="Cancel" variant="destructive" onclick="{!c.closeModal}"/>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </aura:if>
+    
+    <!--lightning:button label="Delete files" onclick="{!c.openModal}"/-->
+</aura:component>
